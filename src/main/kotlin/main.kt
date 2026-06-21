@@ -1,15 +1,82 @@
+import java.io.File
+
 data class Post(
     val id: Int,
     val ownerId: Int = 1,
     val fromId: Int = 1,
     val createdBy: Int = 0,
     val date: Int,
-    val text: String,
+    val text: String?,
     val likes: Likes,
-    val postType: String, // может быть: post, copy, reply, postpone, suggest
+    val postType: String?, // может быть: post, copy, reply, postpone, suggest
     val canDelete: Boolean = false,
     val canEdit: Boolean = false,
-    val isFavourite: Boolean = false
+    val isFavourite: Boolean = false,
+    val attachments: Array<Attachment> = emptyArray()
+)
+
+interface Attachment {
+    val type: String // может быть: photo, video, audio, file, sticker
+}
+
+class PhotoAttachment(
+    override val type: String = "photo",
+    val photo: Photo
+) : Attachment
+
+class Photo(
+    val id: Int,
+    val ownerId: Int,
+    val text: String,
+    val date: Int
+)
+
+class AudioAttachment(
+    override val type: String = "audio",
+    val audio: Audio
+) : Attachment
+
+class Audio(
+    val id: Int,
+    val ownerId: Int,
+    val title: String,
+    val duration: Int
+)
+
+class VideoAttachment(
+    override val type: String = "video",
+    val video: Video
+) : Attachment
+
+class Video(
+    val id: Int,
+    val ownerId: Int,
+    val title: String,
+    val duration: Int
+)
+
+class FileAttachment(
+    override val type: String = "file",
+    val file: File
+) : Attachment
+
+class File(
+    val id: Int,
+    val ownerId: Int,
+    val title: String,
+    val size: Int
+)
+
+class StickerAttachment(
+    override val type: String = "sticker",
+    val sticker: Sticker
+) : Attachment
+
+class Sticker(
+    val productId: Int,
+    val stickerId: Int,
+    val animationUrl: String,
+    val isAllowed: Boolean
 )
 
 class Likes(
