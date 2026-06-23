@@ -91,8 +91,16 @@ class Likes(
         }
 }
 
+class Comment(
+    val id: Int,
+    val ownerId: Int,
+    val date: Int,
+    val text: String
+)
+
 object WallService {
     private var posts = emptyArray<Post>()
+    private var comments = emptyArray<Comment>()
     private var postId = 0
 
     fun add(post: Post): Post {
@@ -117,6 +125,16 @@ object WallService {
         return false
     }
 
+    fun createComment(postId: Int, comment: Comment): Comment {
+        for ((index, post) in posts.withIndex()) {
+            if (post.id == postId) {
+                comments += comment
+                return comment
+            }
+        }
+        throw PostNotFoundException("Such post doesn't exist")
+    }
+
     fun clear() {
         posts = emptyArray()
         postId = 0
@@ -134,4 +152,9 @@ fun main() {
     println()
     WallService.update(1)
     println(WallService.update(3))
+
+    println(WallService.createComment(1, comment = Comment(0, 0,
+        23062026, "Comment to first post")))
 }
+
+class PostNotFoundException(message: String): RuntimeException(message)
